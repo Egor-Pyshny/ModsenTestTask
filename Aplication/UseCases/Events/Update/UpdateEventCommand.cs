@@ -1,0 +1,44 @@
+﻿using Domain.Entities;
+using MediatR;
+
+namespace Aplication.UseCases.Events.Update
+{
+    public record UpdateEventCommand : IRequest<EventDTO>
+    {
+        public Guid id;
+        public string name;
+        public string description;
+        public string plan;
+        public string spickerFirstName;
+        public string spickerSecondName;
+        public string organizerFirstName;
+        public string organizerSecondName;
+        public DateTime time;
+        public string country;
+        public string city;
+        public string street;
+        public string category;
+        public int maxParticipants;
+
+        public UpdateEventCommand(Guid id, string name, string description, string plan,
+            string spickerFirstName, string spickerSecondName, string organizerFirstName,
+            string organizerSecondName, DateTime time, string country, string city,
+            string street, string category, int maxParticipants)
+        {
+            this.id = id;
+            this.name = name;
+            this.description = description;
+            this.plan = plan;
+            this.spickerFirstName = spickerFirstName;
+            this.spickerSecondName = spickerSecondName;
+            this.organizerFirstName = organizerFirstName;
+            this.organizerSecondName = organizerSecondName;
+            this.time = time;
+            this.country = country;
+            this.city = city;
+            this.street = street;
+            this.category = category;
+            this.maxParticipants = maxParticipants;
+        }
+    }
+}
