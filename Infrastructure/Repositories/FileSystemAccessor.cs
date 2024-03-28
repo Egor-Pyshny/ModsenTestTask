@@ -1,16 +1,18 @@
 ﻿using Aplication.Interfaces;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Caching.Distributed;
 
 namespace Infrastructure.Repositories
 {
     public class FileSystemAccessor : IFileSystemAccessor
     {
         private readonly IWebHostEnvironment _hostEnvironment;
-
-        public FileSystemAccessor(IWebHostEnvironment hostEnvironment)
+        private readonly IDistributedCache _cache;
+        public FileSystemAccessor(IWebHostEnvironment hostEnvironment, IDistributedCache distributedCache)
         {
             _hostEnvironment = hostEnvironment;
+            _cache = distributedCache;
         }
 
         public void Delete(string path)
@@ -19,11 +21,18 @@ namespace Infrastructure.Repositories
             if (File.Exists(filePath))
             {
                 File.Delete(filePath);
+                //_cache.Remove(filePath);
             }
         }
 
-        public static string GetFileBase64(string path) {
+        private string GetFileBase64(string path) {
             return Convert.ToBase64String(File.ReadAllBytes(path));
+        }
+
+        public string GetFile(string path)
+        {
+            string file = /*_cache.GetString(path) ??*/ Convert.ToBase64String(File.ReadAllBytes(path));
+            return file;
         }
 
         public string Save(IFormFile file, Guid eventId)
@@ -41,6 +50,7 @@ namespace Infrastructure.Repositories
             {
                 file.CopyTo(fileStream);
             }
+           // _cache.SetString(filePath, GetFileBase64(filePath));
             return $"UserData\\{eventId}\\{newFileName}";
         }
     }

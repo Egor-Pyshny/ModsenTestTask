@@ -7,5 +7,7 @@ namespace Aplication.Interfaces
         string Save(IFormFile file, Guid eventId);
 
         void Delete(string path);
+
+        string GetFile(string path);
     }
 }

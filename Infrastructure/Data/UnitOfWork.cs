@@ -5,6 +5,7 @@ using Infrastructure.Exceptions;
 using Infrastructure.Repositories;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Distributed;
 using Npgsql;
 using System.Data.Common;
 using System.IO;
@@ -19,11 +20,11 @@ namespace Infrastructure.Data
         public IFileSystemAccessor fileAccessor { get; }
         private AppDbContext dbContext { get; }
 
-        public UnitOfWork(AppDbContext dbContext, IMapper mapper, IWebHostEnvironment hostEnvironment)
+        public UnitOfWork(AppDbContext dbContext, IMapper mapper, IWebHostEnvironment hostEnvironment, IDistributedCache distributedCache)
         {
             this.dbContext = dbContext;
             this.userRepository = new UserRepository(dbContext, mapper);
-            this.fileAccessor = new FileSystemAccessor(hostEnvironment);
+            this.fileAccessor = new FileSystemAccessor(hostEnvironment, distributedCache);
             this.eventRepository = new EventRepository(dbContext, mapper);
             this.imageRepository = new ImageRepository(dbContext);
         }
