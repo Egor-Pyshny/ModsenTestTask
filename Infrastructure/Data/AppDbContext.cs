@@ -6,10 +6,12 @@ namespace Infrastructure.Data
 {
     public class AppDbContext : DbContext
     {
-        public DbSet<UserDbModel> Users { get; set; } = null!;
-        public DbSet<EventDbModel> Events { get; set; } = null!;
-        public DbSet<CatalogView> Catalog { get; set; } = null!;
-        public DbSet<ImageDbModel> Images { get; set; } = null!;
+        public virtual DbSet<UserDbModel> Users { get; set; } = null!;
+        public virtual DbSet<EventDbModel> Events { get; set; } = null!;
+        public virtual DbSet<CatalogView> Catalog { get; set; } = null!;
+        public virtual DbSet<ImageDbModel> Images { get; set; } = null!;
+
+        public AppDbContext() { }
 
         public AppDbContext(DbContextOptions<AppDbContext> options)
         : base(options)

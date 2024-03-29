@@ -13,8 +13,8 @@ namespace Domain.Validators
                 .MaximumLength(20).WithMessage("First name should not exceed 20 characters.");
 
             RuleFor(user => user.password).NotNull().NotEmpty()
-                .MinimumLength(8).WithMessage("Second name should be more than 8 characters.")
-                .MaximumLength(30).WithMessage("Second name should not exceed 20 characters.");
+                .MinimumLength(8).WithMessage("password should be more than 8 characters.")
+                .MaximumLength(30).WithMessage("password should not exceed 20 characters.");
 
             RuleFor(user => user.secondName).NotNull().NotEmpty()
                 .Must(e => e.All(Char.IsLetter))

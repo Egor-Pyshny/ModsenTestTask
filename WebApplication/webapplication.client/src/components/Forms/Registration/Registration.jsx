@@ -2,30 +2,41 @@ import './Registration.css'
 
 export const Registration = () =>{
 
-    const handleSubmit = (e) => {
+    const error = document.getElementById('errorMessage');
+    if (error) {
+        error.remove();
+    }
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
         const formDictionary = { ...e.target };
         var data = new Map();
         for (var i = 0; i < 5; i++) {
             data.set(formDictionary[i].name, formDictionary[i].value)
         }
         const myJson = JSON.stringify(Object.fromEntries(data));
-        fetch("/api/v1.0/user", {
+        const response = await fetch("/api/v1.0/user", {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: myJson
-        })
-            .then(response => {
-                if (response.status == 201) {
-                    console.log('Запрос успешно выполнен');
-                } else {
-                    console.error('Ошибка при выполнении запроса');
-                }
-            })
-            .catch(error => {
-                console.error(error);
-            });
+        });
+        if (response.status == 201) {
+            const data = await response.json();
+            localStorage.setItem('userId', data);
+        } else {
+            const errorMessage = document.getElementById('errorMessage');
+            if (errorMessage) {
+                const paragraph = document.createElement('p');
+                paragraph.textContent = 'Ошибка при выполнении запроса';
+                paragraph.style.color = 'red';
+                paragraph.id = 'errorMessage'
+                paragraph.style.fontSize = '30px';
+                const container = document.getElementById('root');
+                container.appendChild(paragraph);
+            }
+        }
     }
 
     return (

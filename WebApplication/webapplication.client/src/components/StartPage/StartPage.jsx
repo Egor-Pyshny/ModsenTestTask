@@ -4,7 +4,7 @@ import './StartPage.css'
 
 export const StartPage = () =>{
     return (
-        <div className='startPageMainDiv'> 
+        <div className='startPageMainDiv' id='startPageDiv'> 
             <div>
                 <h1 className="startPageHeader">Test Task</h1>
                 <Registration/>
