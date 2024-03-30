@@ -26,7 +26,7 @@ string connection = builder.Configuration.GetConnectionString(
     "Port=5432;" +
     "Database=modsen;" +
     "Username=postgres;" +
-"Password=postgres"
+    "Password=postgres"
     );
 builder.Services.AddDbContext<AppDbContext>(
     options => options.UseNpgsql(

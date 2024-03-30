@@ -1,72 +1,105 @@
-﻿using Infrastructure.Data;
+﻿using FluentAssertions;
+using Infrastructure.Data;
 using Infrastructure.Data.DataBaseModels;
 using Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
-using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Npgsql;
 
 namespace Tests.RepositoriesTests
 {
     [TestFixture]
     public class ImageRepositoryTests
     {
-        [Test]
-        public void Create_Should_CreateNewImageAndReturnImageId()
-        {
-            var dbContext = CreateMockDbContext();
-            var repository = new ImageRepository(dbContext);   
-        }
 
-        private IQueryable<ImageDbModel> GetMockImageData()
+        private TestDbContext? _context;
+        private ImageRepository _repository;
+        private Guid eventId, imageId;
+
+        public void SetUp()
         {
-            var imageData = new List<ImageDbModel>
+            var masterConnectionString = new NpgsqlConnectionStringBuilder();
+            masterConnectionString.Host = "localhost";            
+            masterConnectionString.Port = 5432;
+            masterConnectionString.Username = "postgres";
+            masterConnectionString.Password = "postgres";
+            using (var connection = new NpgsqlConnection(masterConnectionString.ConnectionString))
             {
-                new ImageDbModel { Id = Guid.NewGuid(), Path = "image1.jpg" },
-                new ImageDbModel { Id = Guid.NewGuid(), Path = "image2.jpg" },
-            };
-            return imageData.AsQueryable();
+                connection.Open();
+                using (var command = new NpgsqlCommand())
+                {
+                    command.Connection = connection;
+                    command.CommandText = $"SELECT 1 FROM pg_database WHERE datname='modsen_test'";
+                    var result = command.ExecuteScalar();
+                    if (!(result != null && result != DBNull.Value))
+                    {
+                        command.CommandText = $"CREATE DATABASE \"modsen_test\"";
+                        command.ExecuteNonQuery();
+                        command.CommandText = $"GRANT ALL PRIVILEGES ON DATABASE \"modsen_test\" TO \"postgres\"";
+                        command.ExecuteNonQuery();
+                    }
+                }
+            }
+            string connectionStr = 
+                "Host=localhost;" +
+                "Port=5432;" +
+                "Database=modsen_test;" +
+                "Username=postgres;" +
+                "Password=postgres"
+                ;
+            var dbContextOptions = new DbContextOptionsBuilder<TestDbContext>()
+                .UseNpgsql(connectionStr).Options;
+            _context = new TestDbContext(dbContextOptions);
+            _context.Database.Migrate();
+            _context.Events.Add(
+                    new EventDbModel(){ 
+                        Category = "test",
+                        City = "test",
+                        Country = "test",
+                        Street = "test",
+                        Description = "test",
+                        FreePlaces = 20,
+                        Id = eventId = Guid.NewGuid(),
+                        MaxParticipants = 20,
+                        OrganizerFirstName = "test",
+                        OrganizerSecondName = "test",
+                        SpickerFirstName = "test",
+                        SpickerSecondName = "test",
+                        Name = "test",
+                        Plan = "test",
+                        Time = DateTime.UtcNow,
+                        Images = [],
+                        Users = [],
+                    }
+                );
+            _context.SaveChanges();
+            _repository = new ImageRepository(_context);
         }
 
-        private IQueryable<EventDbModel> GetMockEventData()
-        {
-            var eventData = new List<EventDbModel>
-            {
-                new EventDbModel { Id = Guid.NewGuid(), Images = new List<ImageDbModel>() },
-                new EventDbModel { Id = Guid.NewGuid(), Images = new List<ImageDbModel>() },
-            };
-            return eventData.AsQueryable();
+        [TearDown]
+        public void TearDown() {
+            _context!.Dispose();
         }
 
-        private AppDbContext CreateMockDbContext()
+        [Test, Order(1)]
+        public void CreateTest() 
         {
-            var mockImageDbSet = new Mock<DbSet<ImageDbModel>>();
-            mockImageDbSet.As<IQueryable<ImageDbModel>>().Setup(m => m.Provider)
-                .Returns(GetMockImageData().Provider);
-            mockImageDbSet.As<IQueryable<ImageDbModel>>().Setup(m => m.Expression)
-                .Returns(GetMockImageData().Expression);
-            mockImageDbSet.As<IQueryable<ImageDbModel>>().Setup(m => m.ElementType)
-                .Returns(GetMockImageData().ElementType);
-            mockImageDbSet.As<IQueryable<ImageDbModel>>().Setup(m => m.GetEnumerator())
-                .Returns(() => GetMockImageData().GetEnumerator());
+            imageId = _repository.Create("Test.path", eventId);
+            _context.SaveChanges();
+            imageId.Should().NotBeEmpty();
+        }
 
-            var mockEventDbSet = new Mock<DbSet<EventDbModel>>();
-            mockEventDbSet.As<IQueryable<EventDbModel>>().Setup(m => m.Provider)
-                .Returns(GetMockEventData().Provider);
-            mockEventDbSet.As<IQueryable<EventDbModel>>().Setup(m => m.Expression)
-                .Returns(GetMockEventData().Expression);
-            mockEventDbSet.As<IQueryable<EventDbModel>>().Setup(m => m.ElementType)
-                .Returns(GetMockEventData().ElementType);
-            mockEventDbSet.As<IQueryable<EventDbModel>>().Setup(m => m.GetEnumerator())
-                .Returns(() => GetMockEventData().GetEnumerator());
+        [Test, Order(2)]
+        public void GetPathTest()
+        {
+            var path = _repository.GetPath(imageId);
+            path.Should().Be("Test.path");
+        }
 
-            var mockDbContext = new Mock<AppDbContext>();
-            mockDbContext.Setup(c => c.Images).Returns(mockImageDbSet.Object);
-            mockDbContext.Setup(c => c.Events).Returns(mockEventDbSet.Object);
-            return mockDbContext.Object;
+        [Test, Order(3)]
+        public void DeleteTest()
+        {
+            int res = _repository.Delete(imageId);
+            res.Should().Be(1);
         }
     }
 }

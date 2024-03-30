@@ -11,10 +11,12 @@ namespace Infrastructure.Data
         public virtual DbSet<CatalogView> Catalog { get; set; } = null!;
         public virtual DbSet<ImageDbModel> Images { get; set; } = null!;
 
-        public AppDbContext() { }
-
         public AppDbContext(DbContextOptions<AppDbContext> options)
         : base(options)
+        { }
+
+        public AppDbContext(DbContextOptions options) 
+            : base(options)
         { }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
