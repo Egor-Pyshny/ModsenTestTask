@@ -27,7 +27,7 @@ export const Registration = () =>{
             localStorage.setItem('userId', data);
         } else {
             const errorMessage = document.getElementById('errorMessage');
-            if (errorMessage) {
+            if (errorMessage == null) {
                 const paragraph = document.createElement('p');
                 paragraph.textContent = 'Ошибка при выполнении запроса';
                 paragraph.style.color = 'red';
