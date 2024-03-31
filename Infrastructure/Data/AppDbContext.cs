@@ -15,10 +15,10 @@ namespace Infrastructure.Data
         : base(options)
         { }
 
-        public AppDbContext(DbContextOptions options) 
+/*        public AppDbContext(DbContextOptions options) 
             : base(options)
         { }
-
+*/
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=modsen;Username=postgres;Password=postgres");

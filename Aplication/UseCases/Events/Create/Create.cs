@@ -20,7 +20,7 @@ namespace Aplication.UseCases.Events.Create
             {
                 id = _repository.eventRepository.Create(newEvent);
                 _repository.Save();
-                path = _repository.fileAccessor.Save(request.file, id);
+                //path = _repository.fileAccessor.Save(request.file, id);
                 imageId = _repository.imageRepository.Create(path, id);
                 _repository.Save();
                 _repository.Refresh();

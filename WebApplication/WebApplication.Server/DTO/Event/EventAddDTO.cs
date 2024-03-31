@@ -30,7 +30,7 @@ namespace WebApplication3.DTO.Event
         public string category { get; set; }
         [Required]
         public int maxParticipants { get; set; }
-        [Required]
-        public IFormFile file { get; set; }
+        //[Required]
+        //public IFormFile file { get; set; }
     }
 }

@@ -54,6 +54,7 @@ builder.Services.AddTransient<IEmailSender, SmtpEmailSender>();
 builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
 builder.Services.AddTransient<IEventRepository, EventRepository>();
 builder.Services.AddTransient<IUserRepository, UserRepository>();
+builder.Services.AddTransient<IFileSystemAccessor, FileSystemAccessor>();
 
 builder.Services.AddStackExchangeRedisCache(options =>
 {

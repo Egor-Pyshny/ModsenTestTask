@@ -15,13 +15,14 @@ namespace Domain.Entities
         public string password { get; private set; }
         public DateTime registrationDate { get; private set; }
     
-        private User(Guid id, string firstName, string secondName, string thirdName, string email, DateTime registrationDate)
+        private User(Guid id, string firstName, string secondName, string thirdName, string email, string password, DateTime registrationDate)
         {
             this.id = id;
             this.firstName = firstName;
             this.secondName = secondName;
             this.thirdName = thirdName;
             this.email = email;
+            this.password = password;
             this.registrationDate = registrationDate;
         }
 
@@ -42,9 +43,9 @@ namespace Domain.Entities
             }
         }
 
-        public static User Create(string firstName, string secondName, string thirdName, string email, DateTime registrationDate)
+        public static User Create(string firstName, string secondName, string thirdName, string email, string password, DateTime registrationDate)
         {
-            var p = new User(Guid.NewGuid(), firstName, secondName, thirdName, email, registrationDate);
+            var p = new User(Guid.NewGuid(), firstName, secondName, thirdName, email, password, registrationDate);
             UserValidator validator = new UserValidator();
             ValidationResult result = validator.Validate(p);
             if (!result.IsValid)

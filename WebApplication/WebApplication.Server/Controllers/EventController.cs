@@ -27,7 +27,7 @@ namespace WebApplication3.Controllers
         /// Create new event
         /// </summary>
         [HttpPut]
-        public async Task<IActionResult> CreateEvent([FromForm]EventAddDTO data)
+        public async Task<IActionResult> CreateEvent([FromBody] EventAddDTO data)
         {            
             var createCmd = _mapper.Map<CreateEventCommand>(data);
             var result = await _mediator.Send(createCmd);

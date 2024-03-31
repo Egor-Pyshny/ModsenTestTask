@@ -88,8 +88,8 @@ namespace Infrastructure.Repositories
 
         public List<Event> GetAllFiltered(FilterListCommand filter)
         {
-            List<Expression<Func<EventDbModel, bool>>> filters = CompileFilters(filter);
-            IQueryable<EventDbModel> query = _dbContext.Events;
+            List<Expression<Func<CatalogView, bool>>> filters = CompileFilters(filter);
+            IQueryable<CatalogView> query = _dbContext.Catalog;
             foreach (var f in filters)
             {
                 query.Where(f);
@@ -98,9 +98,9 @@ namespace Infrastructure.Repositories
             return res;
         }
 
-        private List<Expression<Func<EventDbModel, bool>>> CompileFilters(FilterListCommand filter)
+        private List<Expression<Func<CatalogView, bool>>> CompileFilters(FilterListCommand filter)
         {
-            List<Expression<Func<EventDbModel, bool>>> filters = [];
+            List<Expression<Func<CatalogView, bool>>> filters = [];
             if (filter.city != null)
             { 
                 filters.Add(t => t.City == filter.city);
