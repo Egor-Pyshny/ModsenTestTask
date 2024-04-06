@@ -36,12 +36,21 @@ export const LogIn = () =>{
     }
 
     return (
-        <form id='loginForm' className="logInСontainer" onSubmit={handleSubmit}>
-            <label for="email">Почта</label>
-            <input type="email" id="email" name="email" />
+        <div className='startPageMainDiv' id='startPageDiv'>
+            <div>
+                <h1 className="startPageHeader">Test Task</h1>
+                <form id='loginForm' className="logInСontainer" onSubmit={handleSubmit}>
+                    <label for="email">Почта</label>
+                    <input type="email" id="email" name="email" />
             
-            <label for="password">Пароль</label>
-            <input type="password" id="password" name="password"/>
-        </form>
+                    <label for="password">Пароль</label>
+                    <input type="password" id="password" name="password" />
+                </form >
+                <div className="buttonStartPageContainer">
+                    <button className="enterButton" form="loginForm" type="submit">Войти</button>
+                    <button className="registerButton" type="button">Зарегистрироваться</button>
+                </div>
+            </div >
+        </div >
     )
 }

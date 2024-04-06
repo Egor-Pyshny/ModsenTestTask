@@ -20,7 +20,7 @@ export const Registration = () =>{
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: myJson
+            body: myJson,
         });
         if (response.status == 201) {
             const data = await response.json();
@@ -40,23 +40,34 @@ export const Registration = () =>{
     }
 
     return (
-        <form id='registerForm' className="registerСontainer" onSubmit={handleSubmit}>
 
-            <label htmlFor="firstName">Имя</label>
-            <input type="text" id="firstName" name='firstName' required/>
-            
-            <label htmlFor="secondName">Фамилия</label>
-            <input type="text" id="secondName" name='secondName' required />
-            
-            <label htmlFor="thirdName">Отчество</label>
-            <input type="text" id="thirdName" name='thirdName' required />
-            
-            <label htmlFor="email">Почта</label>
-            <input type="email" id="email" name='email' required />
-            
-            <label htmlFor="password">Пароль</label>
-            <input type="password" id="password" name='password' required />
+        <div className='startPageMainDiv' id='startPageDiv'>
+            <div>
+                <h1 className="startPageHeader">Test Task</h1>
+                <form id='registerForm' className="registerСontainer"
+                    onSubmit={handleSubmit}>
 
-        </form>
+                    <label htmlFor="firstName">FirstName</label>
+                    <input type="text" id="firstName" name='firstName' required/>
+            
+                    <label htmlFor="secondName">SecondName</label>
+                    <input type="text" id="secondName" name='secondName' required />
+            
+                    <label htmlFor="thirdName">ThirdName</label>
+                    <input type="text" id="thirdName" name='thirdName' required />
+            
+                    <label htmlFor="email">Email</label>
+                    <input type="email" id="email" name='email' required />
+            
+                    <label htmlFor="password">Password</label>
+                    <input type="password" id="password" name='password' required />
+
+                </form>
+                <div className="buttonStartPageContainer">
+                    <button className="enterButton" type="button">Войти</button>
+                    <button className="registerButton" form="registerForm" type="submit">Зарегистрироваться</button>
+                </div>
+            </div>
+        </div>
     )
 }

@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
 import './App.css';
-import { StartPage } from './components/StartPage/StartPage';
+import { Registration } from './components/Forms/Registration.jsx'
 
 function App() {
 
     return (
-        <StartPage />
+        <Registration />
     );
 
 }
